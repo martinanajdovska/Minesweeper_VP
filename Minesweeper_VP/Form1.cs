@@ -16,6 +16,7 @@ namespace Minesweeper_VP
         static int cols = 15;
         int size = 25;
         int mines = 35;
+        string exploded = "";
         Button[,] field = new Button[rows, cols];
         static Random random = new Random();
 
@@ -37,17 +38,17 @@ namespace Minesweeper_VP
                     Button newButton = new Button();
                     newButton.Parent = this;
                     newButton.Size = new Size(size, size);
-                    newButton.Name = "i" + "," + "j";
-                    newButton.Tag =
+                    newButton.Name = $"{i},{j}";
+                    newButton.Tag = "";
                     newButton.Location = new Point(leftStart + j * size, topStart + i * size);
                     newButton.MouseClick += new MouseEventHandler(CheckForMine);
                     this.field[i, j] = newButton;
                 }
             }
         }
-        private void GenerateMines(int mines)
+        private void GenerateMines(int _mines)
         {
-            while (mines > 0)
+            while (_mines > 0)
             {
                 int i = random.Next(50);
                 if (i < rows)
@@ -57,13 +58,62 @@ namespace Minesweeper_VP
                     {
                         field[i, j].Tag = "bomb";
                         field[i, j].Text = "b";
-                        mines--;
+                        _mines--;
                     }
                 }
             }
         }
         private void CheckForMine(Object sender, MouseEventArgs e)
         {
+            Button clicked = sender as Button;
+            int i = int.Parse(clicked.Name.Split(',')[0]);
+            int j = int.Parse(clicked.Name.Split(',')[1]);
+
+            clicked = field[i, j];
+            if (clicked.Tag.Equals("bomb"))
+            {
+                clicked.BackgroundImage = Properties.Resources.bomb;
+                clicked.BackgroundImageLayout = ImageLayout.Stretch;
+                exploded = clicked.Name;
+                GameOver();
+            }
+            else
+            {
+                //TODO check neighbors for mines
+            }
+            clicked.FlatStyle = FlatStyle.Flat;
+            clicked.FlatAppearance.BorderSize = 1;
+        }
+        private void GameOver()
+        {
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    field[i, j].Enabled = false;
+                }
+            }
+        }
+        private void ClearField()
+        {
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    field[i, j].Enabled = true;
+                    field[i, j].Text = "";
+                    field[i, j].Tag = "";
+                    field[i, j].FlatStyle = FlatStyle.Standard;
+                    field[i, j].BackgroundImage = null;
+
+                }
+            }
+        }
+
+        private void btnRestart_Click(object sender, EventArgs e)
+        {
+            ClearField();
+            GenerateMines(this.mines);
         }
     }
 }

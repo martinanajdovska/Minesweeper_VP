@@ -29,10 +29,20 @@
         private void InitializeComponent()
         {
             this.components = new System.ComponentModel.Container();
-            this.btnRestart = new System.Windows.Forms.Button();
             this.lblTime = new System.Windows.Forms.Label();
             this.timer1 = new System.Windows.Forms.Timer(this.components);
+            this.btnRestart = new System.Windows.Forms.Button();
             this.SuspendLayout();
+            // 
+            // lblTime
+            // 
+            this.lblTime.AutoSize = true;
+            this.lblTime.Font = new System.Drawing.Font("Noto Sans Cond", 13.8F, System.Drawing.FontStyle.Bold);
+            this.lblTime.Location = new System.Drawing.Point(366, 20);
+            this.lblTime.Name = "lblTime";
+            this.lblTime.Size = new System.Drawing.Size(72, 32);
+            this.lblTime.TabIndex = 1;
+            this.lblTime.Text = "Time :";
             // 
             // btnRestart
             // 
@@ -44,16 +54,7 @@
             this.btnRestart.Size = new System.Drawing.Size(39, 40);
             this.btnRestart.TabIndex = 0;
             this.btnRestart.UseVisualStyleBackColor = true;
-            // 
-            // lblTime
-            // 
-            this.lblTime.AutoSize = true;
-            this.lblTime.Font = new System.Drawing.Font("Noto Sans Cond", 13.8F, System.Drawing.FontStyle.Bold);
-            this.lblTime.Location = new System.Drawing.Point(366, 20);
-            this.lblTime.Name = "lblTime";
-            this.lblTime.Size = new System.Drawing.Size(72, 32);
-            this.lblTime.TabIndex = 1;
-            this.lblTime.Text = "Time :";
+            this.btnRestart.Click += new System.EventHandler(this.btnRestart_Click);
             // 
             // Form1
             // 
