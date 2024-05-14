@@ -12,20 +12,22 @@ namespace Minesweeper_VP
 {
     public partial class Form1 : Form
     {
-        int rows = 13;
-        int cols = 15;
+        static int rows = 13;
+        static int cols = 15;
         int size = 25;
-        int mines = 30;
+        int mines = 35;
+        Button[,] field = new Button[rows, cols];
+        static Random random = new Random();
 
         public Form1()
         {
             InitializeComponent();
             CreateField();
+            GenerateMines(mines);
         }
 
         private void CreateField()
         {
-            Button[,] field = new Button[rows, cols];
             int leftStart = 6;
             int topStart = 50;
             for (int i = 0; i < rows; i++)
@@ -36,9 +38,27 @@ namespace Minesweeper_VP
                     newButton.Parent = this;
                     newButton.Size = new Size(size, size);
                     newButton.Name = "i" + "," + "j";
+                    newButton.Tag =
                     newButton.Location = new Point(leftStart + j * size, topStart + i * size);
                     newButton.MouseClick += new MouseEventHandler(CheckForMine);
-                    field[i, j] = newButton;
+                    this.field[i, j] = newButton;
+                }
+            }
+        }
+        private void GenerateMines(int mines)
+        {
+            while (mines > 0)
+            {
+                int i = random.Next(50);
+                if (i < rows)
+                {
+                    int j = random.Next(50);
+                    if (j < cols)
+                    {
+                        field[i, j].Tag = "bomb";
+                        field[i, j].Text = "b";
+                        mines--;
+                    }
                 }
             }
         }
