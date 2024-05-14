@@ -37,8 +37,8 @@ namespace Minesweeper_VP
                     Button newButton = new Button();
                     newButton.Parent = this;
                     newButton.Size = new Size(size, size);
-                    newButton.Name = "i" + "," + "j";
-                    newButton.Tag =
+                    newButton.Name = $"{i},{j}";
+                    newButton.Tag = "";
                     newButton.Location = new Point(leftStart + j * size, topStart + i * size);
                     newButton.MouseClick += new MouseEventHandler(CheckForMine);
                     this.field[i, j] = newButton;
@@ -64,6 +64,27 @@ namespace Minesweeper_VP
         }
         private void CheckForMine(Object sender, MouseEventArgs e)
         {
+            Button clicked = sender as Button;
+            int i = int.Parse(clicked.Name.Split(',')[0]);
+            int j = int.Parse(clicked.Name.Split(',')[1]);
+
+            clicked = field[i, j];
+            if (clicked.Tag.Equals("bomb"))
+            {
+                clicked.BackgroundImage = Properties.Resources.bomb;
+                clicked.BackgroundImageLayout = ImageLayout.Stretch;
+                GameOver();
+            }
+            else
+            {
+                //TODO check neighbors for mines
+            }
+            clicked.FlatStyle = FlatStyle.Flat;
+            clicked.FlatAppearance.BorderSize = 1;
+        }
+        private void GameOver()
+        {
+
         }
     }
 }
