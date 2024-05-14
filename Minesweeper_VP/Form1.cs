@@ -16,6 +16,7 @@ namespace Minesweeper_VP
         static int cols = 15;
         int size = 25;
         int mines = 35;
+        string exploded = "";
         Button[,] field = new Button[rows, cols];
         static Random random = new Random();
 
@@ -45,9 +46,9 @@ namespace Minesweeper_VP
                 }
             }
         }
-        private void GenerateMines(int mines)
+        private void GenerateMines(int _mines)
         {
-            while (mines > 0)
+            while (_mines > 0)
             {
                 int i = random.Next(50);
                 if (i < rows)
@@ -57,7 +58,7 @@ namespace Minesweeper_VP
                     {
                         field[i, j].Tag = "bomb";
                         field[i, j].Text = "b";
-                        mines--;
+                        _mines--;
                     }
                 }
             }
@@ -73,6 +74,7 @@ namespace Minesweeper_VP
             {
                 clicked.BackgroundImage = Properties.Resources.bomb;
                 clicked.BackgroundImageLayout = ImageLayout.Stretch;
+                exploded = clicked.Name;
                 GameOver();
             }
             else
@@ -84,7 +86,34 @@ namespace Minesweeper_VP
         }
         private void GameOver()
         {
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    field[i, j].Enabled = false;
+                }
+            }
+        }
+        private void ClearField()
+        {
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    field[i, j].Enabled = true;
+                    field[i, j].Text = "";
+                    field[i, j].Tag = "";
+                    field[i, j].FlatStyle = FlatStyle.Standard;
+                    field[i, j].BackgroundImage = null;
 
+                }
+            }
+        }
+
+        private void btnRestart_Click(object sender, EventArgs e)
+        {
+            ClearField();
+            GenerateMines(this.mines);
         }
     }
 }
