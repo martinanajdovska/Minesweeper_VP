@@ -4,6 +4,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -78,11 +79,24 @@ namespace Minesweeper_VP
             }
             else
             {
-                //TODO check neighbors for mines and write amount
+                CountNeighbourMines(i, j);
                 //TODO call this function for every neighbor that doesn't have a mine
             }
             clicked.FlatStyle = FlatStyle.Flat;
             clicked.FlatAppearance.BorderSize = 1;
+        }
+        private void CountNeighbourMines(int i, int j)
+        {
+            int numOfMines = 0;
+            for (int k = -1; k <= 1; k++)
+            {
+                for (int l = -1; l <= 1; l++)
+                {
+                    if (i + k < 0 || j + l < 0 || i + k >= rows || j + l >= cols) continue;
+                    if (field[i + k, j + l].Tag.Equals("bomb")) numOfMines++;
+                }
+            }
+            field[i, j].Text = numOfMines.ToString();
         }
         private void GameOver()
         {
