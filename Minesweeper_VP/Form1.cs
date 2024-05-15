@@ -13,24 +13,45 @@ namespace Minesweeper_VP
 {
     public partial class Form1 : Form
     {
+        int ticks = 0;
         static int rows = 13;
         static int cols = 15;
         int size = 25;
         int mines = 35;
+        string difficulty = "easy";
         Button[,] field = new Button[rows, cols];
         static Random random = new Random();
 
         public Form1()
         {
             InitializeComponent();
-            CreateField();
+            CreateField("easy");
             GenerateMines(mines);
         }
 
-        private void CreateField()
+        private void CreateField(string difficulty)
         {
             int leftStart = 6;
             int topStart = 50;
+            if (difficulty.Equals("easy"))
+            {
+                rows = 13;
+                cols = 15;
+                mines = 35;
+            }
+            else if (difficulty.Equals("normal"))
+            {
+                rows = 18;
+                cols = 22;
+                mines = 120;
+            }
+            else
+            {
+                rows = 25;
+                cols = 45;
+                mines = 250;
+            }
+            field = new Button[rows, cols];
             for (int i = 0; i < rows; i++)
             {
                 for (int j = 0; j < cols; j++)
@@ -66,6 +87,7 @@ namespace Minesweeper_VP
         }
         private void MouseClickEvent(Object sender, MouseEventArgs e)
         {
+            timer1.Enabled = true;
             if (e.Button == MouseButtons.Left) CheckForMine(sender);
             else if (e.Button == MouseButtons.Right) SetFlag(sender);
         }
@@ -154,6 +176,7 @@ namespace Minesweeper_VP
         }
         private void GameOver()
         {
+            timer1.Enabled = false;
             for (int i = 0; i < rows; i++)
             {
                 for (int j = 0; j < cols; j++)
@@ -168,20 +191,48 @@ namespace Minesweeper_VP
             {
                 for (int j = 0; j < cols; j++)
                 {
-                    field[i, j].Enabled = true;
-                    field[i, j].Text = "";
-                    field[i, j].Tag = "";
-                    field[i, j].FlatStyle = FlatStyle.Standard;
-                    field[i, j].BackgroundImage = null;
-
+                    field[i, j].Dispose();
                 }
             }
         }
 
+        private void Restart()
+        {
+            ticks = 0;
+            lblTime.Text = $"Time: ";
+            ClearField();
+            CreateField(difficulty);
+            GenerateMines(this.mines);
+        }
         private void btnRestart_Click(object sender, EventArgs e)
         {
-            ClearField();
-            GenerateMines(this.mines);
+            Restart();
+        }
+
+        private void timer1_Tick(object sender, EventArgs e)
+        {
+            ticks++;
+            int sec = ticks % 60;
+            int min = ticks / 60;
+            lblTime.Text = $"Time:   {min:00}:{sec:00}";
+        }
+
+        private void easyToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            difficulty = "easy";
+            Restart();
+        }
+
+        private void normalToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            difficulty = "normal";
+            Restart();
+        }
+
+        private void hardToolStripMenuItem1_Click(object sender, EventArgs e)
+        {
+            difficulty = "hard";
+            Restart();
         }
     }
 }
