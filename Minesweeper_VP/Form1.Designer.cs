@@ -103,7 +103,7 @@
             this.difficultyToolStripMenuItem1});
             this.menuStrip2.Location = new System.Drawing.Point(9, 12);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(186, 40);
+            this.menuStrip2.Size = new System.Drawing.Size(184, 40);
             this.menuStrip2.TabIndex = 3;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -123,7 +123,7 @@
             // 
             this.easyToolStripMenuItem1.Font = new System.Drawing.Font("Noto Sans Cond", 11.8F, System.Drawing.FontStyle.Bold);
             this.easyToolStripMenuItem1.Name = "easyToolStripMenuItem1";
-            this.easyToolStripMenuItem1.Size = new System.Drawing.Size(224, 32);
+            this.easyToolStripMenuItem1.Size = new System.Drawing.Size(164, 32);
             this.easyToolStripMenuItem1.Text = "Easy";
             this.easyToolStripMenuItem1.Click += new System.EventHandler(this.easyToolStripMenuItem1_Click);
             // 
@@ -131,7 +131,7 @@
             // 
             this.normalToolStripMenuItem1.Font = new System.Drawing.Font("Noto Sans Cond", 11.8F, System.Drawing.FontStyle.Bold);
             this.normalToolStripMenuItem1.Name = "normalToolStripMenuItem1";
-            this.normalToolStripMenuItem1.Size = new System.Drawing.Size(224, 32);
+            this.normalToolStripMenuItem1.Size = new System.Drawing.Size(164, 32);
             this.normalToolStripMenuItem1.Text = "Normal";
             this.normalToolStripMenuItem1.Click += new System.EventHandler(this.normalToolStripMenuItem1_Click);
             // 
@@ -139,7 +139,7 @@
             // 
             this.hardToolStripMenuItem1.Font = new System.Drawing.Font("Noto Sans Cond", 11.8F, System.Drawing.FontStyle.Bold);
             this.hardToolStripMenuItem1.Name = "hardToolStripMenuItem1";
-            this.hardToolStripMenuItem1.Size = new System.Drawing.Size(224, 32);
+            this.hardToolStripMenuItem1.Size = new System.Drawing.Size(164, 32);
             this.hardToolStripMenuItem1.Text = "Hard";
             this.hardToolStripMenuItem1.Click += new System.EventHandler(this.hardToolStripMenuItem1_Click);
             // 
@@ -153,9 +153,11 @@
             this.Controls.Add(this.btnRestart);
             this.Controls.Add(this.menuStrip2);
             this.Controls.Add(this.lblTime);
+            this.DoubleBuffered = true;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Minesweeper";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip2.ResumeLayout(false);
             this.menuStrip2.PerformLayout();
             this.ResumeLayout(false);
