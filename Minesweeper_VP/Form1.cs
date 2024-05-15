@@ -26,13 +26,12 @@ namespace Minesweeper_VP
         {
             InitializeComponent();
             CreateField("easy");
-            GenerateMines(mines);
         }
 
         private void CreateField(string difficulty)
         {
             int leftStart = 6;
-            int topStart = 50;
+            int topStart = 60;
             if (difficulty.Equals("easy"))
             {
                 rows = 13;
@@ -43,7 +42,7 @@ namespace Minesweeper_VP
             {
                 rows = 18;
                 cols = 22;
-                mines = 120;
+                mines = 100;
             }
             else
             {
@@ -66,6 +65,12 @@ namespace Minesweeper_VP
                     this.field[i, j] = newButton;
                 }
             }
+            GenerateMines(mines);
+            btnRestart.Left = this.Size.Width / 2 - 20;
+            lblTime.Left = this.Size.Width - lblTime.Width - 81;
+            lblHighScore.Left = this.Size.Width - lblHighScore.Width - 82;
+            lblHighScoreValue.Left = lblHighScore.Left + 99;
+            this.Show();
         }
         private void GenerateMines(int mines)
         {
@@ -198,11 +203,12 @@ namespace Minesweeper_VP
 
         private void Restart()
         {
+            this.Hide();
             ticks = 0;
             lblTime.Text = $"Time: ";
+            timer1.Enabled = false;
             ClearField();
             CreateField(difficulty);
-            GenerateMines(this.mines);
         }
         private void btnRestart_Click(object sender, EventArgs e)
         {
@@ -216,23 +222,49 @@ namespace Minesweeper_VP
             int min = ticks / 60;
             lblTime.Text = $"Time:   {min:00}:{sec:00}";
         }
+        private void ChangeDifficultyDesign()
+        {
+            this.Hide();
+            lblTime.Left = 0;
+            btnRestart.Left = 0;
+            lblHighScore.Left = 0;
+            lblHighScoreValue.Left = 0;
+        }
 
         private void easyToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             difficulty = "easy";
+            easyToolStripMenuItem1.Checked = true;
+            normalToolStripMenuItem1.Checked = false;
+            hardToolStripMenuItem1.Checked = false;
+            ChangeDifficultyDesign();
             Restart();
         }
 
         private void normalToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             difficulty = "normal";
+            easyToolStripMenuItem1.Checked = false;
+            normalToolStripMenuItem1.Checked = true;
+            hardToolStripMenuItem1.Checked = false;
+            ChangeDifficultyDesign();
             Restart();
         }
 
         private void hardToolStripMenuItem1_Click(object sender, EventArgs e)
         {
             difficulty = "hard";
+            easyToolStripMenuItem1.Checked = false;
+            normalToolStripMenuItem1.Checked = false;
+            hardToolStripMenuItem1.Checked = true;
+            ChangeDifficultyDesign();
             Restart();
+        }
+
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            this.AutoSize = true;
+            this.AutoSizeMode = AutoSizeMode.GrowAndShrink;
         }
     }
 }

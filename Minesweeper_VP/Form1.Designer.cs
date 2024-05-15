@@ -41,6 +41,8 @@
             this.easyToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.normalToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.hardToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
+            this.lblHighScore = new System.Windows.Forms.Label();
+            this.lblHighScoreValue = new System.Windows.Forms.Label();
             this.menuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -48,7 +50,7 @@
             // 
             this.lblTime.AutoSize = true;
             this.lblTime.Font = new System.Drawing.Font("Noto Sans Cond", 13.8F, System.Drawing.FontStyle.Bold);
-            this.lblTime.Location = new System.Drawing.Point(354, 20);
+            this.lblTime.Location = new System.Drawing.Point(354, 37);
             this.lblTime.Name = "lblTime";
             this.lblTime.Size = new System.Drawing.Size(67, 32);
             this.lblTime.TabIndex = 1;
@@ -103,7 +105,7 @@
             this.difficultyToolStripMenuItem1});
             this.menuStrip2.Location = new System.Drawing.Point(9, 12);
             this.menuStrip2.Name = "menuStrip2";
-            this.menuStrip2.Size = new System.Drawing.Size(186, 40);
+            this.menuStrip2.Size = new System.Drawing.Size(184, 40);
             this.menuStrip2.TabIndex = 3;
             this.menuStrip2.Text = "menuStrip2";
             // 
@@ -121,6 +123,8 @@
             // 
             // easyToolStripMenuItem1
             // 
+            this.easyToolStripMenuItem1.Checked = true;
+            this.easyToolStripMenuItem1.CheckState = System.Windows.Forms.CheckState.Checked;
             this.easyToolStripMenuItem1.Font = new System.Drawing.Font("Noto Sans Cond", 11.8F, System.Drawing.FontStyle.Bold);
             this.easyToolStripMenuItem1.Name = "easyToolStripMenuItem1";
             this.easyToolStripMenuItem1.Size = new System.Drawing.Size(224, 32);
@@ -143,6 +147,26 @@
             this.hardToolStripMenuItem1.Text = "Hard";
             this.hardToolStripMenuItem1.Click += new System.EventHandler(this.hardToolStripMenuItem1_Click);
             // 
+            // lblHighScore
+            // 
+            this.lblHighScore.AutoSize = true;
+            this.lblHighScore.Font = new System.Drawing.Font("Noto Sans Cond", 13.8F, System.Drawing.FontStyle.Bold);
+            this.lblHighScore.Location = new System.Drawing.Point(299, 5);
+            this.lblHighScore.Name = "lblHighScore";
+            this.lblHighScore.Size = new System.Drawing.Size(122, 32);
+            this.lblHighScore.TabIndex = 4;
+            this.lblHighScore.Text = "High score:";
+            // 
+            // lblHighScoreValue
+            // 
+            this.lblHighScoreValue.AutoSize = true;
+            this.lblHighScoreValue.Font = new System.Drawing.Font("Noto Sans Cond", 13.8F, System.Drawing.FontStyle.Bold);
+            this.lblHighScoreValue.Location = new System.Drawing.Point(427, 5);
+            this.lblHighScoreValue.Name = "lblHighScoreValue";
+            this.lblHighScoreValue.Size = new System.Drawing.Size(26, 32);
+            this.lblHighScoreValue.TabIndex = 5;
+            this.lblHighScoreValue.Text = "0";
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -150,12 +174,16 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(516, 480);
+            this.Controls.Add(this.lblHighScoreValue);
+            this.Controls.Add(this.lblHighScore);
             this.Controls.Add(this.btnRestart);
             this.Controls.Add(this.menuStrip2);
             this.Controls.Add(this.lblTime);
+            this.DoubleBuffered = true;
             this.Name = "Form1";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Minesweeper";
+            this.Load += new System.EventHandler(this.Form1_Load);
             this.menuStrip2.ResumeLayout(false);
             this.menuStrip2.PerformLayout();
             this.ResumeLayout(false);
@@ -177,6 +205,8 @@
         private System.Windows.Forms.ToolStripMenuItem easyToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem normalToolStripMenuItem1;
         private System.Windows.Forms.ToolStripMenuItem hardToolStripMenuItem1;
+        private System.Windows.Forms.Label lblHighScore;
+        private System.Windows.Forms.Label lblHighScoreValue;
     }
 }
 
