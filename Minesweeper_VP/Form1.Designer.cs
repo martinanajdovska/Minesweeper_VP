@@ -43,6 +43,8 @@
             this.hardToolStripMenuItem1 = new System.Windows.Forms.ToolStripMenuItem();
             this.lblHighScore = new System.Windows.Forms.Label();
             this.lblHighScoreValue = new System.Windows.Forms.Label();
+            this.lblScore = new System.Windows.Forms.Label();
+            this.lblScoreValue = new System.Windows.Forms.Label();
             this.menuStrip2.SuspendLayout();
             this.SuspendLayout();
             // 
@@ -103,7 +105,7 @@
             this.menuStrip2.ImageScalingSize = new System.Drawing.Size(20, 20);
             this.menuStrip2.Items.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.difficultyToolStripMenuItem1});
-            this.menuStrip2.Location = new System.Drawing.Point(9, 12);
+            this.menuStrip2.Location = new System.Drawing.Point(0, 37);
             this.menuStrip2.Name = "menuStrip2";
             this.menuStrip2.Size = new System.Drawing.Size(184, 40);
             this.menuStrip2.TabIndex = 3;
@@ -151,7 +153,7 @@
             // 
             this.lblHighScore.AutoSize = true;
             this.lblHighScore.Font = new System.Drawing.Font("Noto Sans Cond", 13.8F, System.Drawing.FontStyle.Bold);
-            this.lblHighScore.Location = new System.Drawing.Point(299, 5);
+            this.lblHighScore.Location = new System.Drawing.Point(12, 5);
             this.lblHighScore.Name = "lblHighScore";
             this.lblHighScore.Size = new System.Drawing.Size(122, 32);
             this.lblHighScore.TabIndex = 4;
@@ -161,11 +163,31 @@
             // 
             this.lblHighScoreValue.AutoSize = true;
             this.lblHighScoreValue.Font = new System.Drawing.Font("Noto Sans Cond", 13.8F, System.Drawing.FontStyle.Bold);
-            this.lblHighScoreValue.Location = new System.Drawing.Point(427, 5);
+            this.lblHighScoreValue.Location = new System.Drawing.Point(140, 5);
             this.lblHighScoreValue.Name = "lblHighScoreValue";
             this.lblHighScoreValue.Size = new System.Drawing.Size(26, 32);
             this.lblHighScoreValue.TabIndex = 5;
             this.lblHighScoreValue.Text = "0";
+            // 
+            // lblScore
+            // 
+            this.lblScore.AutoSize = true;
+            this.lblScore.Font = new System.Drawing.Font("Noto Sans Cond", 13.8F, System.Drawing.FontStyle.Bold);
+            this.lblScore.Location = new System.Drawing.Point(348, 5);
+            this.lblScore.Name = "lblScore";
+            this.lblScore.Size = new System.Drawing.Size(73, 32);
+            this.lblScore.TabIndex = 6;
+            this.lblScore.Text = "Score:";
+            // 
+            // lblScoreValue
+            // 
+            this.lblScoreValue.AutoSize = true;
+            this.lblScoreValue.Font = new System.Drawing.Font("Noto Sans Cond", 13.8F, System.Drawing.FontStyle.Bold);
+            this.lblScoreValue.Location = new System.Drawing.Point(418, 5);
+            this.lblScoreValue.Name = "lblScoreValue";
+            this.lblScoreValue.Size = new System.Drawing.Size(26, 32);
+            this.lblScoreValue.TabIndex = 7;
+            this.lblScoreValue.Text = "0";
             // 
             // Form1
             // 
@@ -174,6 +196,8 @@
             this.AutoSize = true;
             this.AutoSizeMode = System.Windows.Forms.AutoSizeMode.GrowAndShrink;
             this.ClientSize = new System.Drawing.Size(516, 480);
+            this.Controls.Add(this.lblScoreValue);
+            this.Controls.Add(this.lblScore);
             this.Controls.Add(this.lblHighScoreValue);
             this.Controls.Add(this.lblHighScore);
             this.Controls.Add(this.btnRestart);
@@ -207,6 +231,8 @@
         private System.Windows.Forms.ToolStripMenuItem hardToolStripMenuItem1;
         private System.Windows.Forms.Label lblHighScore;
         private System.Windows.Forms.Label lblHighScoreValue;
+        private System.Windows.Forms.Label lblScore;
+        private System.Windows.Forms.Label lblScoreValue;
     }
 }
 

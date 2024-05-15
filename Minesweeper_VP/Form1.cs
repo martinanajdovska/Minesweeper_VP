@@ -19,6 +19,7 @@ namespace Minesweeper_VP
         int size = 25;
         int mines = 35;
         string difficulty = "easy";
+        int score = 0;
         Button[,] field = new Button[rows, cols];
         static Random random = new Random();
 
@@ -31,24 +32,27 @@ namespace Minesweeper_VP
         private void CreateField(string difficulty)
         {
             int leftStart = 6;
-            int topStart = 60;
+            int topStart = 65;
             if (difficulty.Equals("easy"))
             {
                 rows = 13;
                 cols = 15;
                 mines = 35;
+                lblHighScoreValue.Text = Properties.Settings.Default.easyHighScore;
             }
             else if (difficulty.Equals("normal"))
             {
                 rows = 18;
                 cols = 22;
                 mines = 100;
+                lblHighScoreValue.Text = Properties.Settings.Default.normalHighScore;
             }
             else
             {
                 rows = 25;
                 cols = 45;
                 mines = 250;
+                lblHighScoreValue.Text = Properties.Settings.Default.hardHighScore;
             }
             field = new Button[rows, cols];
             for (int i = 0; i < rows; i++)
@@ -66,10 +70,23 @@ namespace Minesweeper_VP
                 }
             }
             GenerateMines(mines);
+            if (difficulty.Equals("easy"))
+            {
+                lblTime.Left = this.Size.Width - lblTime.Width - 91;
+                lblScore.Left = this.Size.Width - lblScore.Width - 92;
+            }
+            else if (difficulty.Equals("normal"))
+            {
+                lblTime.Left = this.Size.Width - lblTime.Width - 101;
+                lblScore.Left = this.Size.Width - lblScore.Width - 102;
+            }
+            else
+            {
+                lblTime.Left = this.Size.Width - lblTime.Width - 121;
+                lblScore.Left = this.Size.Width - lblScore.Width - 125;
+            }
+            lblScoreValue.Left = lblScore.Left + 59;
             btnRestart.Left = this.Size.Width / 2 - 20;
-            lblTime.Left = this.Size.Width - lblTime.Width - 81;
-            lblHighScore.Left = this.Size.Width - lblHighScore.Width - 82;
-            lblHighScoreValue.Left = lblHighScore.Left + 99;
             this.Show();
         }
         private void GenerateMines(int mines)
@@ -189,6 +206,7 @@ namespace Minesweeper_VP
                     field[i, j].Enabled = false;
                 }
             }
+
         }
         private void ClearField()
         {
@@ -227,8 +245,8 @@ namespace Minesweeper_VP
             this.Hide();
             lblTime.Left = 0;
             btnRestart.Left = 0;
-            lblHighScore.Left = 0;
-            lblHighScoreValue.Left = 0;
+            lblScore.Left = 0;
+            lblScoreValue.Left = 0;
         }
 
         private void easyToolStripMenuItem1_Click(object sender, EventArgs e)
