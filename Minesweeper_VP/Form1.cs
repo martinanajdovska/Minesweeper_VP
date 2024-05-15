@@ -16,7 +16,6 @@ namespace Minesweeper_VP
         static int cols = 15;
         int size = 25;
         int mines = 35;
-        string exploded = "";
         Button[,] field = new Button[rows, cols];
         static Random random = new Random();
 
@@ -46,9 +45,9 @@ namespace Minesweeper_VP
                 }
             }
         }
-        private void GenerateMines(int _mines)
+        private void GenerateMines(int mines)
         {
-            while (_mines > 0)
+            while (mines > 0)
             {
                 int i = random.Next(50);
                 if (i < rows)
@@ -56,9 +55,10 @@ namespace Minesweeper_VP
                     int j = random.Next(50);
                     if (j < cols)
                     {
+                        if (field[i, j].Tag.Equals("bomb")) continue;
                         field[i, j].Tag = "bomb";
                         field[i, j].Text = "b";
-                        _mines--;
+                        mines--;
                     }
                 }
             }
@@ -74,12 +74,12 @@ namespace Minesweeper_VP
             {
                 clicked.BackgroundImage = Properties.Resources.bomb;
                 clicked.BackgroundImageLayout = ImageLayout.Stretch;
-                exploded = clicked.Name;
                 GameOver();
             }
             else
             {
-                //TODO check neighbors for mines
+                //TODO check neighbors for mines and write amount
+                //TODO call this function for every neighbor that doesn't have a mine
             }
             clicked.FlatStyle = FlatStyle.Flat;
             clicked.FlatAppearance.BorderSize = 1;
