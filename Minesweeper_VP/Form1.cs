@@ -18,6 +18,8 @@ namespace Minesweeper_VP
         static int cols = 15;
         int size = 25;
         int mines = 35;
+        int openedTiles = 0;
+        int numOfFlagsUsed = 0;
         string difficulty = "easy";
         int score = 0;
         Button[,] field = new Button[rows, cols];
@@ -112,6 +114,18 @@ namespace Minesweeper_VP
             timer1.Enabled = true;
             if (e.Button == MouseButtons.Left) CheckForMine(sender);
             else if (e.Button == MouseButtons.Right) SetFlag(sender);
+            if (difficulty.Equals("easy"))
+            {
+                lblScoreValue.Text = $"{-ticks * 0.3 + openedTiles - numOfFlagsUsed * 0.7}";
+            }
+            else if (difficulty.Equals("normal"))
+            {
+                lblScoreValue.Text = $"{-ticks * 0.2 + openedTiles - numOfFlagsUsed * 0.5}";
+            }
+            else
+            {
+                lblScoreValue.Text = $"{-ticks * 0.1 + openedTiles - numOfFlagsUsed * 0.2}";
+            }
         }
         private void SetFlag(Object sender)
         {
@@ -124,12 +138,14 @@ namespace Minesweeper_VP
                 field[i, j].BackgroundImage = null;
                 field[i, j].FlatStyle = FlatStyle.Standard;
                 field[i, j].Tag = "";
+                numOfFlagsUsed--;
             }
             else
             {
                 field[i, j].BackgroundImage = Properties.Resources.flag;
                 field[i, j].BackgroundImageLayout = ImageLayout.Stretch;
                 field[i, j].Tag = "flag";
+                numOfFlagsUsed++;
             }
         }
         private void CheckForMine(Object sender)
@@ -192,6 +208,7 @@ namespace Minesweeper_VP
                     if (field[x, y].FlatStyle == FlatStyle.Flat || field[x, y].Tag.Equals("flag")) continue;
                     field[x, y].FlatStyle = FlatStyle.Flat;
                     field[x, y].FlatAppearance.BorderSize = 1;
+                    openedTiles++;
                     CountNeighbourMines(x, y);
                 }
             }
@@ -206,7 +223,6 @@ namespace Minesweeper_VP
                     field[i, j].Enabled = false;
                 }
             }
-
         }
         private void ClearField()
         {
@@ -224,6 +240,7 @@ namespace Minesweeper_VP
             this.Hide();
             ticks = 0;
             lblTime.Text = $"Time: ";
+            lblScoreValue.Text = $"0";
             timer1.Enabled = false;
             ClearField();
             CreateField(difficulty);
