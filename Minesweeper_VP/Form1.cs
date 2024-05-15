@@ -19,6 +19,7 @@ namespace Minesweeper_VP
         int size = 25;
         int mines = 35;
         int openedTiles = 0;
+        int totalEmptyTiles = 0;
         int numOfFlagsUsed = 0;
         string difficulty = "easy";
         int score = 0;
@@ -57,6 +58,7 @@ namespace Minesweeper_VP
                 lblHighScoreValue.Text = Properties.Settings.Default.hardHighScore;
             }
             field = new Button[rows, cols];
+            totalEmptyTiles = rows * cols - mines;
             for (int i = 0; i < rows; i++)
             {
                 for (int j = 0; j < cols; j++)
@@ -114,18 +116,7 @@ namespace Minesweeper_VP
             timer1.Enabled = true;
             if (e.Button == MouseButtons.Left) CheckForMine(sender);
             else if (e.Button == MouseButtons.Right) SetFlag(sender);
-            if (difficulty.Equals("easy"))
-            {
-                lblScoreValue.Text = $"{openedTiles - numOfFlagsUsed * 0.7}";
-            }
-            else if (difficulty.Equals("normal"))
-            {
-                lblScoreValue.Text = $"{-ticks * 0.2 + openedTiles - numOfFlagsUsed * 0.5}";
-            }
-            else
-            {
-                lblScoreValue.Text = $"{-ticks * 0.1 + openedTiles - numOfFlagsUsed * 0.2}";
-            }
+            CalculateScore();
         }
         private void SetFlag(Object sender)
         {
@@ -211,6 +202,21 @@ namespace Minesweeper_VP
                     openedTiles++;
                     CountNeighbourMines(x, y);
                 }
+            }
+        }
+        private void CalculateScore()
+        {
+            if (difficulty.Equals("easy"))
+            {
+                lblScoreValue.Text = $"{openedTiles - numOfFlagsUsed * 0.7}";
+            }
+            else if (difficulty.Equals("normal"))
+            {
+                lblScoreValue.Text = $"{-ticks * 0.2 + openedTiles - numOfFlagsUsed * 0.5}";
+            }
+            else
+            {
+                lblScoreValue.Text = $"{-ticks * 0.1 + openedTiles - numOfFlagsUsed * 0.2}";
             }
         }
         private void GameOver()
