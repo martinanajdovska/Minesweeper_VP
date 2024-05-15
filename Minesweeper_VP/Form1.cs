@@ -223,6 +223,24 @@ namespace Minesweeper_VP
                     field[i, j].Enabled = false;
                 }
             }
+            decimal score = decimal.Parse(lblScoreValue.Text);
+            decimal highScore = decimal.Parse(lblHighScoreValue.Text);
+            if (score > highScore)
+            {
+                if (difficulty.Equals("easy"))
+                {
+                    Properties.Settings.Default.easyHighScore = score.ToString();
+                }
+                else if (difficulty.Equals("normal"))
+                {
+                    Properties.Settings.Default.normalHighScore = score.ToString();
+                }
+                else
+                {
+                    Properties.Settings.Default.hardHighScore = score.ToString();
+                }
+                Properties.Settings.Default.Save();
+            }
         }
         private void ClearField()
         {

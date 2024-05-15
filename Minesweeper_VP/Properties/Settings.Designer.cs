@@ -37,7 +37,7 @@ namespace Minesweeper_VP.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public string normalHighScore {
             get {
                 return ((string)(this["normalHighScore"]));
@@ -49,7 +49,7 @@ namespace Minesweeper_VP.Properties {
         
         [global::System.Configuration.UserScopedSettingAttribute()]
         [global::System.Diagnostics.DebuggerNonUserCodeAttribute()]
-        [global::System.Configuration.DefaultSettingValueAttribute("")]
+        [global::System.Configuration.DefaultSettingValueAttribute("0")]
         public string hardHighScore {
             get {
                 return ((string)(this["hardHighScore"]));
