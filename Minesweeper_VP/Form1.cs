@@ -116,7 +116,7 @@ namespace Minesweeper_VP
             else if (e.Button == MouseButtons.Right) SetFlag(sender);
             if (difficulty.Equals("easy"))
             {
-                lblScoreValue.Text = $"{-ticks * 0.3 + openedTiles - numOfFlagsUsed * 0.7}";
+                lblScoreValue.Text = $"{openedTiles - numOfFlagsUsed * 0.7}";
             }
             else if (difficulty.Equals("normal"))
             {
@@ -256,6 +256,15 @@ namespace Minesweeper_VP
             int sec = ticks % 60;
             int min = ticks / 60;
             lblTime.Text = $"Time:   {min:00}:{sec:00}";
+            if (!difficulty.Equals("easy") && ticks > 10)
+            {
+                decimal score = decimal.Parse(lblScoreValue.Text);
+                if (score < 0)
+                {
+                    GameOver();
+                    MessageBox.Show("You ran out of time!");
+                }
+            }
         }
         private void ChangeDifficultyDesign()
         {
