@@ -80,10 +80,22 @@ namespace Minesweeper_VP
             else
             {
                 CountNeighbourMines(i, j);
-                //TODO call this function for every neighbor that doesn't have a mine
             }
             clicked.FlatStyle = FlatStyle.Flat;
             clicked.FlatAppearance.BorderSize = 1;
+        }
+        private List<string> GetEmptyNeighbours(int i, int j)
+        {
+            List<string> emptyNeighbours = new List<string>();
+            for (int k = -1; k <= 1; k++)
+            {
+                for (int l = -1; l <= 1; l++)
+                {
+                    if (i + k < 0 || j + l < 0 || i + k >= rows || j + l >= cols) continue;
+                    if (!field[i + k, j + l].Tag.Equals("bomb")) emptyNeighbours.Add(field[i + k, j + l].Name);
+                }
+            }
+            return emptyNeighbours;
         }
         private void CountNeighbourMines(int i, int j)
         {
@@ -93,10 +105,26 @@ namespace Minesweeper_VP
                 for (int l = -1; l <= 1; l++)
                 {
                     if (i + k < 0 || j + l < 0 || i + k >= rows || j + l >= cols) continue;
+                    if (field[i + k, j + l].FlatStyle == FlatStyle.Flat) continue;
                     if (field[i + k, j + l].Tag.Equals("bomb")) numOfMines++;
                 }
             }
-            field[i, j].Text = numOfMines.ToString();
+            field[i, j].Text = numOfMines == 0 ? "" : $"{numOfMines}";
+            if (numOfMines != 0) return;
+
+            List<string> emptyNeighbors = GetEmptyNeighbours(i, j);
+            if (emptyNeighbors.Count > 0)
+            {
+                foreach (string name in emptyNeighbors)
+                {
+                    int x = int.Parse(name.Split(',')[0]);
+                    int y = int.Parse(name.Split(',')[1]);
+                    if (field[x, y].FlatStyle == FlatStyle.Flat) continue;
+                    field[x, y].FlatStyle = FlatStyle.Flat;
+                    field[x, y].FlatAppearance.BorderSize = 1;
+                    CountNeighbourMines(x, y);
+                }
+            }
         }
         private void GameOver()
         {
