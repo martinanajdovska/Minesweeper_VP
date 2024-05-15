@@ -41,7 +41,7 @@ namespace Minesweeper_VP
                     newButton.Name = $"{i},{j}";
                     newButton.Tag = "";
                     newButton.Location = new Point(leftStart + j * size, topStart + i * size);
-                    newButton.MouseClick += new MouseEventHandler(CheckForMine);
+                    newButton.MouseUp += new MouseEventHandler(MouseClickEvent);
                     this.field[i, j] = newButton;
                 }
             }
@@ -64,13 +64,38 @@ namespace Minesweeper_VP
                 }
             }
         }
-        private void CheckForMine(Object sender, MouseEventArgs e)
+        private void MouseClickEvent(Object sender, MouseEventArgs e)
+        {
+            if (e.Button == MouseButtons.Left) CheckForMine(sender);
+            else if (e.Button == MouseButtons.Right) SetFlag(sender);
+        }
+        private void SetFlag(Object sender)
+        {
+            Button clicked = sender as Button;
+            int i = int.Parse(clicked.Name.Split(',')[0]);
+            int j = int.Parse(clicked.Name.Split(',')[1]);
+
+            if (field[i, j].Tag.Equals("flag"))
+            {
+                field[i, j].BackgroundImage = null;
+                field[i, j].FlatStyle = FlatStyle.Standard;
+                field[i, j].Tag = "";
+            }
+            else
+            {
+                field[i, j].BackgroundImage = Properties.Resources.flag;
+                field[i, j].BackgroundImageLayout = ImageLayout.Stretch;
+                field[i, j].Tag = "flag";
+            }
+        }
+        private void CheckForMine(Object sender)
         {
             Button clicked = sender as Button;
             int i = int.Parse(clicked.Name.Split(',')[0]);
             int j = int.Parse(clicked.Name.Split(',')[1]);
 
             clicked = field[i, j];
+            if (clicked.Tag.Equals("flag")) return;
             if (clicked.Tag.Equals("bomb"))
             {
                 clicked.BackgroundImage = Properties.Resources.bomb;
@@ -82,7 +107,7 @@ namespace Minesweeper_VP
                 CountNeighbourMines(i, j);
             }
             clicked.FlatStyle = FlatStyle.Flat;
-            clicked.FlatAppearance.BorderSize = 1;
+            //clicked.FlatAppearance.BorderSize = 1;
         }
         private List<string> GetEmptyNeighbours(int i, int j)
         {
@@ -105,13 +130,14 @@ namespace Minesweeper_VP
                 for (int l = -1; l <= 1; l++)
                 {
                     if (i + k < 0 || j + l < 0 || i + k >= rows || j + l >= cols) continue;
-                    if (field[i + k, j + l].FlatStyle == FlatStyle.Flat) continue;
+                    if (field[i + k, j + l].FlatStyle == FlatStyle.Flat || field[i + k, j + l].Tag.Equals("flag")) continue;
                     if (field[i + k, j + l].Tag.Equals("bomb")) numOfMines++;
                 }
             }
             field[i, j].Text = numOfMines == 0 ? "" : $"{numOfMines}";
             if (numOfMines != 0) return;
 
+            field[i, j].FlatAppearance.BorderSize = 0;
             List<string> emptyNeighbors = GetEmptyNeighbours(i, j);
             if (emptyNeighbors.Count > 0)
             {
@@ -119,7 +145,7 @@ namespace Minesweeper_VP
                 {
                     int x = int.Parse(name.Split(',')[0]);
                     int y = int.Parse(name.Split(',')[1]);
-                    if (field[x, y].FlatStyle == FlatStyle.Flat) continue;
+                    if (field[x, y].FlatStyle == FlatStyle.Flat || field[x, y].Tag.Equals("flag")) continue;
                     field[x, y].FlatStyle = FlatStyle.Flat;
                     field[x, y].FlatAppearance.BorderSize = 1;
                     CountNeighbourMines(x, y);
