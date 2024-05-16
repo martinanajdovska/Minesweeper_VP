@@ -128,18 +128,32 @@ namespace Minesweeper_VP
             int i = int.Parse(clicked.Name.Split(',')[0]);
             int j = int.Parse(clicked.Name.Split(',')[1]);
 
-            if (field[i, j].Tag.Equals("flag"))
+            if (field[i, j].Tag.Equals("flag") || field[i, j].Tag.Equals("flagged-bomb"))
             {
                 field[i, j].BackgroundImage = null;
                 field[i, j].FlatStyle = FlatStyle.Standard;
-                field[i, j].Tag = "";
+                if (field[i, j].Tag.Equals("flagged-bomb"))
+                {
+                    field[i, j].Tag = "bomb";
+                }
+                else
+                {
+                    field[i, j].Tag = "";
+                }
                 numOfFlagsUsed--;
             }
             else
             {
                 field[i, j].BackgroundImage = Properties.Resources.flag;
                 field[i, j].BackgroundImageLayout = ImageLayout.Stretch;
-                field[i, j].Tag = "flag";
+                if (field[i, j].Tag.Equals("bomb"))
+                {
+                    field[i, j].Tag = "flagged-bomb";
+                }
+                else
+                {
+                    field[i, j].Tag = "flag";
+                }
                 numOfFlagsUsed++;
             }
         }
@@ -150,7 +164,7 @@ namespace Minesweeper_VP
             int j = int.Parse(clicked.Name.Split(',')[1]);
 
             clicked = field[i, j];
-            if (clicked.Tag.Equals("flag")) return;
+            if (clicked.Tag.Equals("flag") || clicked.Tag.Equals("flagged-bomb")) return;
             if (openedTiles == 0 || !clicked.Tag.Equals("bomb"))
             {
                 if (openedTiles == 0) totalEmptyTiles++;
@@ -173,7 +187,7 @@ namespace Minesweeper_VP
                 for (int l = -1; l <= 1; l++)
                 {
                     if (i + k < 0 || j + l < 0 || i + k >= rows || j + l >= cols) continue;
-                    if (!field[i + k, j + l].Tag.Equals("bomb")) emptyNeighbours.Add(field[i + k, j + l].Name);
+                    if (field[i + k, j + l].Tag.Equals("")) emptyNeighbours.Add(field[i + k, j + l].Name);
                 }
             }
             return emptyNeighbours;
@@ -181,17 +195,31 @@ namespace Minesweeper_VP
         private void CountNeighbourMines(int i, int j)
         {
             int numOfMines = 0;
+            bool flag = false;
             for (int k = -1; k <= 1; k++)
             {
                 for (int l = -1; l <= 1; l++)
                 {
                     if (i + k < 0 || j + l < 0 || i + k >= rows || j + l >= cols) continue;
-                    if (field[i + k, j + l].FlatStyle == FlatStyle.Flat || field[i + k, j + l].Tag.Equals("flag")) continue;
+                    if (field[i + k, j + l].FlatStyle == FlatStyle.Flat) continue;
+                    if (field[i + k, j + l].Tag.Equals("flag") || field[i + k, j + l].Tag.Equals("flagged-bomb"))
+                    {
+                        flag = true;
+                    }
                     if (field[i + k, j + l].Tag.Equals("bomb")) numOfMines++;
                 }
             }
             field[i, j].Text = numOfMines == 0 ? "" : $"{numOfMines}";
-            if (numOfMines != 0) return;
+
+            if (flag)
+            {
+                if (numOfMines == 0) field[i, j].FlatAppearance.BorderSize = 0;
+                return;
+            }
+            if (numOfMines != 0)
+            {
+                return;
+            }
 
             field[i, j].FlatAppearance.BorderSize = 0;
             List<string> emptyNeighbors = GetEmptyNeighbours(i, j);
@@ -201,7 +229,10 @@ namespace Minesweeper_VP
                 {
                     int x = int.Parse(emptyNeighbors.ElementAt(index).Split(',')[0]);
                     int y = int.Parse(emptyNeighbors.ElementAt(index).Split(',')[1]);
-                    if (field[x, y].FlatStyle == FlatStyle.Flat || field[x, y].Tag.Equals("flag")) continue;
+                    if (field[x, y].FlatStyle == FlatStyle.Flat || field[x, y].Tag.Equals("flag"))
+                    {
+                        continue;
+                    }
                     field[x, y].FlatStyle = FlatStyle.Flat;
                     field[x, y].FlatAppearance.BorderSize = 1;
                     openedTiles++;
