@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
-using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Linq;
 using System.Security.Principal;
@@ -210,7 +209,9 @@ namespace Minesweeper_VP
                     if (field[i + k, j + l].Tag.Equals("bomb")) numOfMines++;
                 }
             }
-            field[i, j].Text = numOfMines == 0 ? "" : $"{numOfMines}"; if (numOfMines == 1)
+            field[i, j].Text = numOfMines == 0 ? "" : $"{numOfMines}";
+
+            if (numOfMines == 1)
             {
                 field[i, j].ForeColor = Color.Blue;
             }
@@ -235,6 +236,17 @@ namespace Minesweeper_VP
                 field[i, j].ForeColor = Color.Aqua;
             }
             field[i, j].FlatAppearance.BorderColor = Color.LightGray;
+
+
+            if (flag)
+            {
+                if (numOfMines == 0) field[i, j].FlatAppearance.BorderSize = 0;
+                return;
+            }
+            if (numOfMines != 0)
+            {
+                return;
+            }
 
             field[i, j].FlatAppearance.BorderSize = 0;
             List<string> emptyNeighbors = GetEmptyNeighbours(i, j);
@@ -322,6 +334,8 @@ namespace Minesweeper_VP
                     field[i, j].Tag = "";
                     field[i, j].FlatStyle = FlatStyle.Standard;
                     field[i, j].BackgroundImage = null;
+                    field[i, j].ForeColor = Color.Black;
+                    field[i, j].FlatAppearance.BorderColor = Color.Black;
                 }
             }
         }
