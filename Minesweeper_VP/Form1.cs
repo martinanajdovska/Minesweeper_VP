@@ -54,7 +54,7 @@ namespace Minesweeper_VP
             {
                 rows = 25;
                 cols = 45;
-                mines = 250;
+                mines = 260;
                 lblHighScoreValue.Text = Properties.Settings.Default.hardHighScore;
             }
             field = new Button[rows, cols];
@@ -147,18 +147,19 @@ namespace Minesweeper_VP
 
             clicked = field[i, j];
             if (clicked.Tag.Equals("flag")) return;
-            if (clicked.Tag.Equals("bomb"))
+            if (openedTiles == 0 || !clicked.Tag.Equals("bomb"))
+            {
+                if (openedTiles == 0) totalEmptyTiles++;
+                clicked.FlatStyle = FlatStyle.Flat;
+                CountNeighbourMines(i, j);
+                openedTiles++;
+            }
+            else
             {
                 clicked.BackgroundImage = Properties.Resources.bomb;
                 clicked.BackgroundImageLayout = ImageLayout.Stretch;
                 GameOver();
             }
-            else
-            {
-                CountNeighbourMines(i, j);
-            }
-            clicked.FlatStyle = FlatStyle.Flat;
-            //clicked.FlatAppearance.BorderSize = 1;
         }
         private List<string> GetEmptyNeighbours(int i, int j)
         {
@@ -206,17 +207,19 @@ namespace Minesweeper_VP
         }
         private void CalculateScore()
         {
+            int bonus = 0;
+            if (totalEmptyTiles == openedTiles) bonus = 500;
             if (difficulty.Equals("easy"))
             {
-                lblScoreValue.Text = $"{openedTiles - numOfFlagsUsed * 0.7}";
+                lblScoreValue.Text = $"{-ticks * 0.2 + openedTiles - numOfFlagsUsed * 0.7 + bonus}";
             }
             else if (difficulty.Equals("normal"))
             {
-                lblScoreValue.Text = $"{-ticks * 0.2 + openedTiles - numOfFlagsUsed * 0.5}";
+                lblScoreValue.Text = $"{-ticks * 0.2 + openedTiles - numOfFlagsUsed * 0.5 + bonus * 4}";
             }
             else
             {
-                lblScoreValue.Text = $"{-ticks * 0.1 + openedTiles - numOfFlagsUsed * 0.2}";
+                lblScoreValue.Text = $"{-ticks * 0.1 + openedTiles - numOfFlagsUsed * 0.2 + bonus * 10}";
             }
         }
         private void GameOver()
@@ -265,6 +268,7 @@ namespace Minesweeper_VP
             ticks = 0;
             lblTime.Text = $"Time: ";
             lblScoreValue.Text = $"0";
+            openedTiles = 0;
             timer1.Enabled = false;
             ClearField();
             CreateField(difficulty);
@@ -288,6 +292,10 @@ namespace Minesweeper_VP
                     GameOver();
                     MessageBox.Show("You ran out of time!");
                 }
+            }
+            if (openedTiles == totalEmptyTiles)
+            {
+                GameOver();
             }
         }
         private void ChangeDifficultyDesign()
