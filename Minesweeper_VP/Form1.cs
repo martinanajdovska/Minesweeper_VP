@@ -8,6 +8,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace Minesweeper_VP
 {
@@ -18,39 +19,47 @@ namespace Minesweeper_VP
         static int cols = 15;
         int size = 25;
         int mines = 35;
+        int openedTiles = 0;
+        int totalEmptyTiles = 0;
+        int numOfFlagsUsed = 0;
         string difficulty = "easy";
+        int score = 0;
         Button[,] field = new Button[rows, cols];
         static Random random = new Random();
 
         public Form1()
         {
             InitializeComponent();
-            CreateField("easy");
+            CreateField();
         }
 
-        private void CreateField(string difficulty)
+        private void CreateField()
         {
             int leftStart = 6;
-            int topStart = 60;
+            int topStart = 65;
             if (difficulty.Equals("easy"))
             {
                 rows = 13;
                 cols = 15;
                 mines = 35;
+                lblHighScoreValue.Text = Properties.Settings.Default.easyHighScore;
             }
             else if (difficulty.Equals("normal"))
             {
                 rows = 18;
                 cols = 22;
                 mines = 100;
+                lblHighScoreValue.Text = Properties.Settings.Default.normalHighScore;
             }
             else
             {
                 rows = 25;
                 cols = 45;
-                mines = 250;
+                mines = 260;
+                lblHighScoreValue.Text = Properties.Settings.Default.hardHighScore;
             }
             field = new Button[rows, cols];
+            totalEmptyTiles = rows * cols - mines;
             for (int i = 0; i < rows; i++)
             {
                 for (int j = 0; j < cols; j++)
@@ -66,10 +75,23 @@ namespace Minesweeper_VP
                 }
             }
             GenerateMines(mines);
+            if (difficulty.Equals("easy"))
+            {
+                lblTime.Left = this.Size.Width - lblTime.Width - 91;
+                lblScore.Left = this.Size.Width - lblScore.Width - 92;
+            }
+            else if (difficulty.Equals("normal"))
+            {
+                lblTime.Left = this.Size.Width - lblTime.Width - 101;
+                lblScore.Left = this.Size.Width - lblScore.Width - 102;
+            }
+            else
+            {
+                lblTime.Left = this.Size.Width - lblTime.Width - 121;
+                lblScore.Left = this.Size.Width - lblScore.Width - 125;
+            }
+            lblScoreValue.Left = lblScore.Left + 59;
             btnRestart.Left = this.Size.Width / 2 - 20;
-            lblTime.Left = this.Size.Width - lblTime.Width - 81;
-            lblHighScore.Left = this.Size.Width - lblHighScore.Width - 82;
-            lblHighScoreValue.Left = lblHighScore.Left + 99;
             this.Show();
         }
         private void GenerateMines(int mines)
@@ -95,6 +117,7 @@ namespace Minesweeper_VP
             timer1.Enabled = true;
             if (e.Button == MouseButtons.Left) CheckForMine(sender);
             else if (e.Button == MouseButtons.Right) SetFlag(sender);
+            CalculateScore();
         }
         private void SetFlag(Object sender)
         {
@@ -107,12 +130,14 @@ namespace Minesweeper_VP
                 field[i, j].BackgroundImage = null;
                 field[i, j].FlatStyle = FlatStyle.Standard;
                 field[i, j].Tag = "";
+                numOfFlagsUsed--;
             }
             else
             {
                 field[i, j].BackgroundImage = Properties.Resources.flag;
                 field[i, j].BackgroundImageLayout = ImageLayout.Stretch;
                 field[i, j].Tag = "flag";
+                numOfFlagsUsed++;
             }
         }
         private void CheckForMine(Object sender)
@@ -123,18 +148,19 @@ namespace Minesweeper_VP
 
             clicked = field[i, j];
             if (clicked.Tag.Equals("flag")) return;
-            if (clicked.Tag.Equals("bomb"))
+            if (openedTiles == 0 || !clicked.Tag.Equals("bomb"))
+            {
+                if (openedTiles == 0) totalEmptyTiles++;
+                clicked.FlatStyle = FlatStyle.Flat;
+                CountNeighbourMines(i, j);
+                openedTiles++;
+            }
+            else
             {
                 clicked.BackgroundImage = Properties.Resources.bomb;
                 clicked.BackgroundImageLayout = ImageLayout.Stretch;
                 GameOver();
             }
-            else
-            {
-                CountNeighbourMines(i, j);
-            }
-            clicked.FlatStyle = FlatStyle.Flat;
-            //clicked.FlatAppearance.BorderSize = 1;
         }
         private List<string> GetEmptyNeighbours(int i, int j)
         {
@@ -168,15 +194,33 @@ namespace Minesweeper_VP
             List<string> emptyNeighbors = GetEmptyNeighbours(i, j);
             if (emptyNeighbors.Count > 0)
             {
-                foreach (string name in emptyNeighbors)
+                for (int index = 0; index < emptyNeighbors.Count; index++)
                 {
-                    int x = int.Parse(name.Split(',')[0]);
-                    int y = int.Parse(name.Split(',')[1]);
+                    int x = int.Parse(emptyNeighbors.ElementAt(index).Split(',')[0]);
+                    int y = int.Parse(emptyNeighbors.ElementAt(index).Split(',')[1]);
                     if (field[x, y].FlatStyle == FlatStyle.Flat || field[x, y].Tag.Equals("flag")) continue;
                     field[x, y].FlatStyle = FlatStyle.Flat;
                     field[x, y].FlatAppearance.BorderSize = 1;
+                    openedTiles++;
                     CountNeighbourMines(x, y);
                 }
+            }
+        }
+        private void CalculateScore()
+        {
+            int bonus = 0;
+            if (totalEmptyTiles == openedTiles) bonus = 500;
+            if (difficulty.Equals("easy"))
+            {
+                lblScoreValue.Text = $"{-ticks * 0.2 + openedTiles - numOfFlagsUsed * 0.7 + bonus}";
+            }
+            else if (difficulty.Equals("normal"))
+            {
+                lblScoreValue.Text = $"{-ticks * 0.2 + openedTiles - numOfFlagsUsed * 0.5 + bonus * 4}";
+            }
+            else
+            {
+                lblScoreValue.Text = $"{-ticks * 0.1 + openedTiles - numOfFlagsUsed * 0.2 + bonus * 10}";
             }
         }
         private void GameOver()
@@ -188,6 +232,24 @@ namespace Minesweeper_VP
                 {
                     field[i, j].Enabled = false;
                 }
+            }
+            decimal score = decimal.Parse(lblScoreValue.Text);
+            decimal highScore = decimal.Parse(lblHighScoreValue.Text);
+            if (score > highScore)
+            {
+                if (difficulty.Equals("easy"))
+                {
+                    Properties.Settings.Default.easyHighScore = score.ToString();
+                }
+                else if (difficulty.Equals("normal"))
+                {
+                    Properties.Settings.Default.normalHighScore = score.ToString();
+                }
+                else
+                {
+                    Properties.Settings.Default.hardHighScore = score.ToString();
+                }
+                Properties.Settings.Default.Save();
             }
         }
         private void ClearField()
@@ -206,9 +268,11 @@ namespace Minesweeper_VP
             this.Hide();
             ticks = 0;
             lblTime.Text = $"Time: ";
+            lblScoreValue.Text = $"0";
+            openedTiles = 0;
             timer1.Enabled = false;
             ClearField();
-            CreateField(difficulty);
+            CreateField();
         }
         private void btnRestart_Click(object sender, EventArgs e)
         {
@@ -221,14 +285,27 @@ namespace Minesweeper_VP
             int sec = ticks % 60;
             int min = ticks / 60;
             lblTime.Text = $"Time:   {min:00}:{sec:00}";
+            if (!difficulty.Equals("easy") && ticks > 10)
+            {
+                decimal score = decimal.Parse(lblScoreValue.Text);
+                if (score < 0)
+                {
+                    GameOver();
+                    MessageBox.Show("You ran out of time!");
+                }
+            }
+            if (openedTiles == totalEmptyTiles)
+            {
+                GameOver();
+            }
         }
         private void ChangeDifficultyDesign()
         {
             this.Hide();
             lblTime.Left = 0;
             btnRestart.Left = 0;
-            lblHighScore.Left = 0;
-            lblHighScoreValue.Left = 0;
+            lblScore.Left = 0;
+            lblScoreValue.Left = 0;
         }
 
         private void easyToolStripMenuItem1_Click(object sender, EventArgs e)
