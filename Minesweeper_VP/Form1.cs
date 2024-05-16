@@ -30,10 +30,10 @@ namespace Minesweeper_VP
         public Form1()
         {
             InitializeComponent();
-            CreateField();
+            CreateField(true);
         }
 
-        private void CreateField()
+        private void CreateField(bool difficultyChanged)
         {
             int leftStart = 6;
             int topStart = 65;
@@ -58,20 +58,23 @@ namespace Minesweeper_VP
                 mines = 260;
                 lblHighScoreValue.Text = Properties.Settings.Default.hardHighScore;
             }
-            field = new Button[rows, cols];
             totalEmptyTiles = rows * cols - mines;
-            for (int i = 0; i < rows; i++)
+            if (difficultyChanged)
             {
-                for (int j = 0; j < cols; j++)
+                field = new Button[rows, cols];
+                for (int i = 0; i < rows; i++)
                 {
-                    Button newButton = new Button();
-                    newButton.Parent = this;
-                    newButton.Size = new Size(size, size);
-                    newButton.Name = $"{i},{j}";
-                    newButton.Tag = "";
-                    newButton.Location = new Point(leftStart + j * size, topStart + i * size);
-                    newButton.MouseUp += new MouseEventHandler(MouseClickEvent);
-                    this.field[i, j] = newButton;
+                    for (int j = 0; j < cols; j++)
+                    {
+                        Button newButton = new Button();
+                        newButton.Parent = this;
+                        newButton.Size = new Size(size, size);
+                        newButton.Name = $"{i},{j}";
+                        newButton.Tag = "";
+                        newButton.Location = new Point(leftStart + j * size, topStart + i * size);
+                        newButton.MouseUp += new MouseEventHandler(MouseClickEvent);
+                        this.field[i, j] = newButton;
+                    }
                 }
             }
             GenerateMines(mines);
@@ -252,7 +255,7 @@ namespace Minesweeper_VP
                 Properties.Settings.Default.Save();
             }
         }
-        private void ClearField()
+        private void DeleteField()
         {
             for (int i = 0; i < rows; i++)
             {
@@ -262,21 +265,43 @@ namespace Minesweeper_VP
                 }
             }
         }
+        private void ClearField()
+        {
+            for (int i = 0; i < rows; i++)
+            {
+                for (int j = 0; j < cols; j++)
+                {
+                    field[i, j].Enabled = true;
+                    field[i, j].Text = "";
+                    field[i, j].Tag = "";
+                    field[i, j].FlatStyle = FlatStyle.Standard;
+                    field[i, j].BackgroundImage = null;
+                }
+            }
+        }
 
-        private void Restart()
+        private void Restart(bool difficultyChanged)
         {
             this.Hide();
             ticks = 0;
             lblTime.Text = $"Time: ";
             lblScoreValue.Text = $"0";
             openedTiles = 0;
+            numOfFlagsUsed = 0;
             timer1.Enabled = false;
-            ClearField();
-            CreateField();
+            if (difficultyChanged)
+            {
+                DeleteField();
+            }
+            else
+            {
+                ClearField();
+            }
+            CreateField(difficultyChanged);
         }
         private void btnRestart_Click(object sender, EventArgs e)
         {
-            Restart();
+            Restart(false);
         }
 
         private void timer1_Tick(object sender, EventArgs e)
@@ -315,7 +340,7 @@ namespace Minesweeper_VP
             normalToolStripMenuItem1.Checked = false;
             hardToolStripMenuItem1.Checked = false;
             ChangeDifficultyDesign();
-            Restart();
+            Restart(true);
         }
 
         private void normalToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -325,7 +350,7 @@ namespace Minesweeper_VP
             normalToolStripMenuItem1.Checked = true;
             hardToolStripMenuItem1.Checked = false;
             ChangeDifficultyDesign();
-            Restart();
+            Restart(true);
         }
 
         private void hardToolStripMenuItem1_Click(object sender, EventArgs e)
@@ -335,7 +360,7 @@ namespace Minesweeper_VP
             normalToolStripMenuItem1.Checked = false;
             hardToolStripMenuItem1.Checked = true;
             ChangeDifficultyDesign();
-            Restart();
+            Restart(true);
         }
 
         private void Form1_Load(object sender, EventArgs e)

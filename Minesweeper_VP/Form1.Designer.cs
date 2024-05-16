@@ -113,7 +113,7 @@
             // 
             // difficultyToolStripMenuItem1
             // 
-            this.difficultyToolStripMenuItem1.BackColor = System.Drawing.SystemColors.Menu;
+            this.difficultyToolStripMenuItem1.BackColor = System.Drawing.SystemColors.ScrollBar;
             this.difficultyToolStripMenuItem1.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] {
             this.easyToolStripMenuItem1,
             this.normalToolStripMenuItem1,
