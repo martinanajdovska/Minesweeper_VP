@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics.Eventing.Reader;
 using System.Drawing;
 using System.Linq;
 using System.Security.Principal;
@@ -191,6 +192,31 @@ namespace Minesweeper_VP
                 }
             }
             field[i, j].Text = numOfMines == 0 ? "" : $"{numOfMines}";
+            if (numOfMines == 1)
+            {
+                field[i, j].ForeColor = Color.Blue;
+            }
+            else if (numOfMines == 2)
+            {
+                field[i, j].ForeColor = Color.Green;
+            }
+            else if (numOfMines == 3)
+            {
+                field[i, j].ForeColor = Color.Red;
+            }
+            else if (numOfMines == 4)
+            {
+                field[i, j].ForeColor = Color.Purple;
+            }
+            else if (numOfMines == 5)
+            {
+                field[i, j].ForeColor = Color.Brown;
+            }
+            else if (numOfMines == 6)
+            {
+                field[i, j].ForeColor = Color.Aqua;
+            }
+            field[i, j].FlatAppearance.BorderColor = Color.LightGray;
             if (numOfMines != 0) return;
 
             field[i, j].FlatAppearance.BorderSize = 0;
