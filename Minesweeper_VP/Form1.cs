@@ -180,10 +180,9 @@ namespace Minesweeper_VP
                 }
             }
             field[i, j].Text = numOfMines == 0 ? "" : $"{numOfMines}";
-            if (numOfMines != 0) return;
             if (numOfMines == 1)
             {
-                field[i, j].ForeColor = Color.LightBlue;
+                field[i, j].ForeColor = Color.Blue;
             }
             else if (numOfMines == 2)
             {
@@ -195,7 +194,7 @@ namespace Minesweeper_VP
             }
             else if (numOfMines == 4)
             {
-                field[i, j].ForeColor = Color.DarkBlue;
+                field[i, j].ForeColor = Color.Purple;
             }
             else if (numOfMines == 5)
             {
@@ -205,6 +204,8 @@ namespace Minesweeper_VP
             {
                 field[i, j].ForeColor = Color.Aqua;
             }
+            field[i, j].FlatAppearance.BorderColor = Color.LightGray;
+            if (numOfMines != 0) return;
 
             field[i, j].FlatAppearance.BorderSize = 0;
             List<string> emptyNeighbors = GetEmptyNeighbours(i, j);
