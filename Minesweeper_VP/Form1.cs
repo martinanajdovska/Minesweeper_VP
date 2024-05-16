@@ -8,6 +8,7 @@ using System.Security.Principal;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace Minesweeper_VP
 {
@@ -29,10 +30,10 @@ namespace Minesweeper_VP
         public Form1()
         {
             InitializeComponent();
-            CreateField("easy");
+            CreateField();
         }
 
-        private void CreateField(string difficulty)
+        private void CreateField()
         {
             int leftStart = 6;
             int topStart = 65;
@@ -193,10 +194,10 @@ namespace Minesweeper_VP
             List<string> emptyNeighbors = GetEmptyNeighbours(i, j);
             if (emptyNeighbors.Count > 0)
             {
-                foreach (string name in emptyNeighbors)
+                for (int index = 0; index < emptyNeighbors.Count; index++)
                 {
-                    int x = int.Parse(name.Split(',')[0]);
-                    int y = int.Parse(name.Split(',')[1]);
+                    int x = int.Parse(emptyNeighbors.ElementAt(index).Split(',')[0]);
+                    int y = int.Parse(emptyNeighbors.ElementAt(index).Split(',')[1]);
                     if (field[x, y].FlatStyle == FlatStyle.Flat || field[x, y].Tag.Equals("flag")) continue;
                     field[x, y].FlatStyle = FlatStyle.Flat;
                     field[x, y].FlatAppearance.BorderSize = 1;
@@ -271,7 +272,7 @@ namespace Minesweeper_VP
             openedTiles = 0;
             timer1.Enabled = false;
             ClearField();
-            CreateField(difficulty);
+            CreateField();
         }
         private void btnRestart_Click(object sender, EventArgs e)
         {
