@@ -302,6 +302,8 @@ namespace Minesweeper_VP
                     field[i, j].Tag = "";
                     field[i, j].FlatStyle = FlatStyle.Standard;
                     field[i, j].BackgroundImage = null;
+                    field[i, j].ForeColor = Color.Black;
+                    field[i, j].FlatAppearance.BorderColor = Color.Black;
                 }
             }
         }
