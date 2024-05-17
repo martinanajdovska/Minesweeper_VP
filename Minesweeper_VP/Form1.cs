@@ -38,21 +38,21 @@ namespace Minesweeper_VP
             {
                 rows = 13;
                 cols = 15;
-                mines = 35;
+                mines = 25;
                 lblHighScoreValue.Text = Properties.Settings.Default.easyHighScore;
             }
             else if (difficulty.Equals("normal"))
             {
                 rows = 18;
                 cols = 22;
-                mines = 90;
+                mines = 65;
                 lblHighScoreValue.Text = Properties.Settings.Default.normalHighScore;
             }
             else
             {
                 rows = 25;
                 cols = 45;
-                mines = 260;
+                mines = 170;
                 lblHighScoreValue.Text = Properties.Settings.Default.hardHighScore;
             }
             totalEmptyTiles = rows * cols - mines;
