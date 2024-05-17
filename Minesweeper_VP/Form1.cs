@@ -203,7 +203,7 @@ namespace Minesweeper_VP
                 {
                     if (i + k < 0 || j + l < 0 || i + k >= rows || j + l >= cols) continue;
                     if (field[i + k, j + l].Tag.Equals("flag") || field[i + k, j + l].Tag.Equals("flagged-bomb")) flag = true;
-                    if (field[i + k, j + l].Tag.Equals("bomb")) numOfMines++;
+                    if (field[i + k, j + l].Tag.Equals("bomb") || field[i + k, j + l].Tag.Equals("flagged-bomb")) numOfMines++;
                 }
             }
             button.Text = numOfMines == 0 ? "" : $"{numOfMines}";
