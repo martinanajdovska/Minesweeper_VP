@@ -39,21 +39,21 @@ namespace Minesweeper_VP
                 rows = 13;
                 cols = 15;
                 mines = 25;
-                lblHighScoreValue.Text = Properties.Settings.Default.easyHighScore;
+                lblHighScore.Text = $"High score: {Properties.Settings.Default.easyHighScore}";
             }
             else if (difficulty.Equals("normal"))
             {
                 rows = 18;
                 cols = 22;
                 mines = 65;
-                lblHighScoreValue.Text = Properties.Settings.Default.normalHighScore;
+                lblHighScore.Text = $"High score: {Properties.Settings.Default.normalHighScore}";
             }
             else
             {
                 rows = 25;
                 cols = 45;
                 mines = 170;
-                lblHighScoreValue.Text = Properties.Settings.Default.hardHighScore;
+                lblHighScore.Text = $"High score: {Properties.Settings.Default.hardHighScore}";
             }
             totalEmptyTiles = rows * cols - mines;
 
@@ -108,6 +108,7 @@ namespace Minesweeper_VP
         {
             timer1.Enabled = true;
             Button clicked = sender as Button;
+            if (clicked.FlatStyle == FlatStyle.Flat) return;
 
             if (e.Button == MouseButtons.Left) CheckForMine(clicked);
             else if (e.Button == MouseButtons.Right) SetFlag(clicked);
@@ -150,11 +151,10 @@ namespace Minesweeper_VP
             if (clicked.Tag.Equals("flag") || clicked.Tag.Equals("flagged-bomb")) return;
             if (openedTiles == 0 || !clicked.Tag.Equals("bomb")) // openedTiles makes sure the first click doesn't end the game even if there is a mine
             {
-                if (openedTiles == 0) totalEmptyTiles++;
+                if (openedTiles == 0 && clicked.Tag.Equals("bomb")) totalEmptyTiles++;
+                CountNeighbourMines(clicked);
                 clicked.FlatStyle = FlatStyle.Flat;
                 clicked.FlatAppearance.BorderSize = 1;
-                CountNeighbourMines(clicked);
-                openedTiles++;
             }
             else
             {
@@ -176,8 +176,7 @@ namespace Minesweeper_VP
             {
                 for (int l = -1; l <= 1; l++)
                 {
-                    if (i + k < 0 || j + l < 0 || i + k >= rows || j + l >= cols // checks if it is out of bounds
-                        || field[i + k, j + l].FlatStyle == FlatStyle.Flat) continue; // makes sure opened buttons aren't counted more than once
+                    if (i + k < 0 || j + l < 0 || i + k >= rows || j + l >= cols) continue; // checks if it is out of bounds
                     if (field[i + k, j + l].Tag.Equals("")) emptyNeighbours.Add(field[i + k, j + l]); // checks if the button has a flag or a bomb
                 }
             }
@@ -214,7 +213,10 @@ namespace Minesweeper_VP
             else if (numOfMines == 4) field[i, j].ForeColor = Color.Purple;
             else if (numOfMines == 5) field[i, j].ForeColor = Color.Brown;
             else if (numOfMines == 6) field[i, j].ForeColor = Color.Aqua;
-            field[i, j].FlatAppearance.BorderColor = Color.LightGray;
+            button.FlatAppearance.BorderColor = Color.LightGray;
+            button.FlatStyle = FlatStyle.Flat;
+
+            openedTiles++;
 
             if (numOfMines == 0) field[i, j].FlatAppearance.BorderSize = 0;
 
@@ -226,9 +228,9 @@ namespace Minesweeper_VP
                 for (int index = 0; index < emptyNeighbors.Count; index++)
                 {
                     Button neighbor = emptyNeighbors.ElementAt(index);
+                    if (neighbor.FlatStyle == FlatStyle.Flat) continue; // makes sure opened buttons aren't counted more than once
                     neighbor.FlatStyle = FlatStyle.Flat;
                     neighbor.FlatAppearance.BorderSize = 1;
-                    openedTiles++;
                     CountNeighbourMines(neighbor);
                 }
             }
@@ -243,9 +245,9 @@ namespace Minesweeper_VP
             int bonus = 0;
             if (totalEmptyTiles == openedTiles) bonus = 500;
 
-            if (difficulty.Equals("easy")) lblScoreValue.Text = $"{-ticks * 0.2 + openedTiles - numOfFlagsUsed * 0.7 + bonus}";
-            else if (difficulty.Equals("normal")) lblScoreValue.Text = $"{-ticks * 0.2 + openedTiles - numOfFlagsUsed * 0.5 + bonus * 4}";
-            else lblScoreValue.Text = $"{-ticks * 0.1 + openedTiles - numOfFlagsUsed * 0.2 + bonus * 10}";
+            if (difficulty.Equals("easy")) lblScore.Text = $"Score: {-ticks * 0.1 + openedTiles - numOfFlagsUsed * 0.5 + bonus}";
+            else if (difficulty.Equals("normal")) lblScore.Text = $"Score: {-ticks * 0.1 + openedTiles - numOfFlagsUsed * 0.5 + bonus * 4}";
+            else lblScore.Text = $"Score: {-ticks * 0.1 + openedTiles - numOfFlagsUsed * 0.2 + bonus * 10}";
         }
         /// <summary>
         /// Disables all of the buttons so the user can't continue playing
@@ -262,8 +264,8 @@ namespace Minesweeper_VP
                 }
             }
 
-            decimal score = decimal.Parse(lblScoreValue.Text);
-            decimal highScore = decimal.Parse(lblHighScoreValue.Text);
+            decimal score = decimal.Parse(lblScore.Text.Split(' ')[1]);
+            decimal highScore = decimal.Parse(lblHighScore.Text.Split(' ')[2]);
             if (score > highScore)
             {
                 if (difficulty.Equals("easy")) Properties.Settings.Default.easyHighScore = score.ToString();
@@ -316,7 +318,7 @@ namespace Minesweeper_VP
             this.Hide();
             ticks = 0;
             lblTime.Text = $"Time: ";
-            lblScoreValue.Text = $"0";
+            lblScore.Text = $"Score: 0";
             openedTiles = 0;
             numOfFlagsUsed = 0;
             timer1.Enabled = false;
@@ -330,9 +332,9 @@ namespace Minesweeper_VP
 
             totalEmptyTiles = rows * cols - mines;
 
-            if (difficulty.Equals("easy")) lblHighScoreValue.Text = Properties.Settings.Default.easyHighScore;
-            else if (difficulty.Equals("normal")) lblHighScoreValue.Text = Properties.Settings.Default.normalHighScore;
-            else lblHighScoreValue.Text = Properties.Settings.Default.hardHighScore;
+            if (difficulty.Equals("easy")) lblHighScore.Text = $"High score: {Properties.Settings.Default.easyHighScore}";
+            else if (difficulty.Equals("normal")) lblHighScore.Text = $"High score: {Properties.Settings.Default.normalHighScore}";
+            else lblHighScore.Text = $"High score: {Properties.Settings.Default.hardHighScore}";
 
             this.Show();
         }
@@ -358,16 +360,11 @@ namespace Minesweeper_VP
             int sec = ticks % 60;
             int min = ticks / 60;
             lblTime.Text = $"Time:   {min:00}:{sec:00}";
-            if (!difficulty.Equals("easy") && ticks > 10)
+            if (openedTiles == totalEmptyTiles)
             {
-                decimal score = decimal.Parse(lblScoreValue.Text);
-                if (score < 0)
-                {
-                    GameOver();
-                    MessageBox.Show("You ran out of time!");
-                }
+                GameOver();
+                MessageBox.Show("You won!");
             }
-            if (openedTiles == totalEmptyTiles) GameOver();
         }
         /// <summary>
         /// Called to create a new game when the user changes the difficulty
@@ -378,7 +375,6 @@ namespace Minesweeper_VP
             lblTime.Left = 0;
             btnRestart.Left = 0;
             lblScore.Left = 0;
-            lblScoreValue.Left = 0;
             Restart(true);
         }
         /// <summary>
@@ -396,7 +392,6 @@ namespace Minesweeper_VP
             ChangeDifficultyDesign();
             lblTime.Left = this.Size.Width - lblTime.Width - 91;
             lblScore.Left = this.Size.Width - lblScore.Width - 92;
-            lblScoreValue.Left = lblScore.Left + 59;
         }
         /// <summary>
         /// Called when user selects normal mode
@@ -413,7 +408,6 @@ namespace Minesweeper_VP
             ChangeDifficultyDesign();
             lblTime.Left = this.Size.Width - lblTime.Width - 101;
             lblScore.Left = this.Size.Width - lblScore.Width - 102;
-            lblScoreValue.Left = lblScore.Left + 59;
         }
         /// <summary>
         /// Called when user selects hard mode
@@ -430,7 +424,6 @@ namespace Minesweeper_VP
             ChangeDifficultyDesign();
             lblTime.Left = this.Size.Width - lblTime.Width - 121;
             lblScore.Left = this.Size.Width - lblScore.Width - 125;
-            lblScoreValue.Left = lblScore.Left + 59;
         }
         /// <summary>
         /// Used to make sure the form's size is as big or small as it needs when changing difficulties
