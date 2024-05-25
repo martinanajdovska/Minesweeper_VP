@@ -70,6 +70,7 @@ namespace Minesweeper_VP
                     newButton.Location = new Point(leftStart + j * size, topStart + i * size); // makes sure the buttons are positioned next to each other
                     newButton.MouseUp += new MouseEventHandler(MouseClickEvent);
                     this.field[i, j] = newButton;
+                    this.Update();
                 }
             }
 
@@ -285,6 +286,7 @@ namespace Minesweeper_VP
                 for (int j = 0; j < cols; j++)
                 {
                     field[i, j].Dispose();
+                    this.Update();
                 }
             }
         }
@@ -304,6 +306,7 @@ namespace Minesweeper_VP
                     field[i, j].BackgroundImage = null;
                     field[i, j].ForeColor = Color.Black;
                     field[i, j].FlatAppearance.BorderColor = Color.Black;
+                    this.Update();
                 }
             }
             GenerateMines(mines);
@@ -315,16 +318,16 @@ namespace Minesweeper_VP
         /// <param name="difficultyChanged"></param>
         private void Restart(bool difficultyChanged)
         {
-            this.Hide();
             ticks = 0;
             lblTime.Text = $"Time: ";
             lblScore.Text = $"Score: 0";
             openedTiles = 0;
             numOfFlagsUsed = 0;
             timer1.Enabled = false;
-
+            Cursor = Cursors.WaitCursor;
             if (difficultyChanged)
             {
+                //this.Hide();
                 DeleteField();
                 CreateField();
             }
@@ -335,7 +338,7 @@ namespace Minesweeper_VP
             if (difficulty.Equals("easy")) lblHighScore.Text = $"High score: {Properties.Settings.Default.easyHighScore}";
             else if (difficulty.Equals("normal")) lblHighScore.Text = $"High score: {Properties.Settings.Default.normalHighScore}";
             else lblHighScore.Text = $"High score: {Properties.Settings.Default.hardHighScore}";
-
+            Cursor = Cursors.Default;
             this.Show();
         }
         /// <summary>
@@ -372,6 +375,7 @@ namespace Minesweeper_VP
         private void ChangeDifficultyDesign()
         {
             this.Hide();
+            Cursor = Cursors.WaitCursor;
             lblTime.Left = 0;
             btnRestart.Left = 0;
             lblScore.Left = 0;
